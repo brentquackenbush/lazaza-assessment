@@ -42,10 +42,7 @@ class ImageProcessor(AbstractProcessor):
                 base64_image=image_data
             )
 
-            # Process the upscaled image
-            upscaled_image_data_bytes = base64.b64decode(upscaled_image['base64_image'])
-            self.image_service_client.post_image(image=upscaled_image_data_bytes)
-
+            self.image_service_client.post_image(image=upscaled_image['base64_image'])
         except jsonschema_exceptions.ValidationError as e:
             self.logger.error(f"Validation error: {e}")
         except Exception as e:

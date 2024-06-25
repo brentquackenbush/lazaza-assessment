@@ -27,15 +27,10 @@ class TestImageProcessor(unittest.IsolatedAsyncioTestCase):
         with open(os.path.join(resources_dir, 'test_image.json'), 'r') as f:
             self.message = json.load(f)
 
-        # Decode the original image bytes from the JSON file
-        self.original_image_bytes = base64.b64decode(self.message['image_data'])
-
     @patch('aiohttp.ClientSession')
     async def test_processMessageValidImage_upscaleImageAndPostImageSuccessful200(self, mock_session):
-        # Encode the original image bytes to create the upscaled image string for the mock return value
-        upscaled_image = base64.b64encode(self.original_image_bytes).decode('utf-8')
         self.image_upscale_client.upscale_image.return_value = {
-            'base64_image': upscaled_image
+            'base64_image': self.message['image_data']
         }
 
         await self.processor.process_message(mock_session.return_value, self.message)
@@ -47,7 +42,7 @@ class TestImageProcessor(unittest.IsolatedAsyncioTestCase):
             base64_image=self.message['image_data']
         )
         self.image_service_client.post_image.assert_called_once_with(
-            image=base64.b64decode(upscaled_image)
+            image=self.message['image_data']
         )
 
     @patch('aiohttp.ClientSession')
