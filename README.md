@@ -1,3 +1,31 @@
+# How to run program
+
+## Install Poetry
+
+If you haven't installed Poetry yet, you can do so by following the instructions on the Poetry website.
+
+## Install project dependencies
+
+```bash
+poetry install
+```
+
+## Create configuration file
+
+Create a config.yml file in the project root with the following content:
+
+```yaml
+upscale_url: "https://example.com/upscale"
+api_key: "example_key"
+```
+
+## Running the Program
+To run the program, use the following command:
+
+```bash
+poetry run python entrypoint.py
+```
+
 # lazaza-assessment
 
 Your goal is to write Python code that delivers the service described in the ticket below.  You should write code that you would feel comfortable submitting for code review and deploying to production. 
