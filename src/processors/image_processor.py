@@ -20,14 +20,11 @@ class ImageProcessor(AbstractProcessor):
             "properties": {
                 "width": {"type": "integer"},
                 "height": {"type": "integer"},
-                "image_data": {"type": "string"}  # Expecting base64-encoded string
+                "image_data": {"type": "string"}
             },
             "required": ["width", "height", "image_data"]
         }
         validate(instance=message, schema=schema)
-
-    def convert_base64_image_to_bytes(self, base64_image: str) -> bytes:
-        return base64.b64decode(base64_image)
 
     async def process_message(self, session, message):
         try:
@@ -45,13 +42,10 @@ class ImageProcessor(AbstractProcessor):
                 base64_image=image_data
             )
 
-            if not upscaled_image or 'base64_image' not in upscaled_image:
-                self.logger.error(f"Upscaling failed or returned invalid data: {upscaled_image}")
-                return
-
             # Process the upscaled image
             upscaled_image_data_bytes = base64.b64decode(upscaled_image['base64_image'])
-            result = self.image_service_client.post_image(image=upscaled_image_data_bytes)
+            self.image_service_client.post_image(image=upscaled_image_data_bytes)
+
         except jsonschema_exceptions.ValidationError as e:
             self.logger.error(f"Validation error: {e}")
         except Exception as e:
